@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { InputForm, Button } from "../../components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import * as actions from "../../store/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
     const location = useLocation();
     const dispatch = useDispatch();
+    const { isLoggedIn } = useSelector(state => state.auth);
+    const navigate = useNavigate();
 
     const [isRegister, setIsRegister] = useState(location.state?.flag || false); // Đặt mặc định là false
     const [invalidFields, setInvalidFields] = useState({});
@@ -19,11 +21,17 @@ const Login = () => {
         }
     }, [location.state?.flag]);
 
+    useEffect(() => {
+        isLoggedIn && navigate('/');
+    }, [isLoggedIn, navigate])
+
     const handleSubmit = async () => {
-        //console.log(payload);
-        //isRegister ? dispatch(actions.register(payload)) : dispatch(actions.login(payload));
-        let invalids = validate(payload);
-        console.log(invalids);
+        let finalPayload = isRegister ?  payload : {
+            phone: payload.phone,
+            password: payload.password
+        };
+        let invalids = validate(finalPayload);
+        if(invalids === 0) isRegister ? dispatch(actions.register(payload)) : dispatch(actions.login(payload));
     }
 
     const validate = (payload) => {
@@ -70,16 +78,22 @@ const Login = () => {
         <div className='bg-white w-[600px] p-[30px] pb-[100px] rounded-md shadow-sm'>
             <h3 className='font-semibold text-2xl mb-3'>{isRegister ? 'Đăng kí tài khoản' : 'Đăng nhập tài khoản'}</h3>
             <div className='w-full flex flex-col gap-5'>
-                {isRegister && <InputForm label={'HỌ VÀ TÊN'} value={payload.name} setValue={setPayload} type={'name'}/>}
-                <InputForm label={'SỐ ĐIỆN THOẠI'} value={payload.phone} setValue={setPayload} type={'phone'}/>
-                <InputForm label={'MẬT KHẨU'} value={payload.password} setValue={setPayload} type={'password'}/>
+                {isRegister && <InputForm setInvalidFields={setInvalidFields} invalidFields={invalidFields} label={'HỌ VÀ TÊN'} value={payload.name} setValue={setPayload} type={'name'}/>}
+                <InputForm setInvalidFields={setInvalidFields} invalidFields={invalidFields} label={'SỐ ĐIỆN THOẠI'} value={payload.phone} setValue={setPayload} type={'phone'}/>
+                <InputForm setInvalidFields={setInvalidFields} invalidFields={invalidFields} label={'MẬT KHẨU'} value={payload.password} setValue={setPayload} type={'password'}/>
                 <Button text={isRegister ? 'Đăng kí' : 'Đăng nhập'} onClick={handleSubmit} bgColor='bg-secondary1' textColor='text-white' fullWidth/>
             </div>
             <div className="mt-7 flex items-center justify-between">
-                {isRegister ? <small>Bạn đã có tài khoản? <span className='text-blue-500 hover:underline cursor-pointer' onClick={() => { setIsRegister(false) }}>Đăng nhập ngay</span></small> :
+                {isRegister ? <small>Bạn đã có tài khoản? <span className='text-blue-500 hover:underline cursor-pointer' onClick={() => { 
+                    setIsRegister(false)
+                    setPayload({phone: '', password: '', name: ''})
+                 }}>Đăng nhập ngay</span></small> :
                 <>
                     <small className='text-[blue] hover:text-[red] cursor-pointer'>Bạn quên mật khẩu</small>
-                    <small onClick={() => { setIsRegister(true) }} className='text-[blue] hover:text-[red] cursor-pointer'>Tạo tài khoản mới</small>
+                    <small onClick={() => { 
+                        setIsRegister(true)
+                        setPayload({phone: '', password: '', name: ''})
+                         }} className='text-[blue] hover:text-[red] cursor-pointer'>Tạo tài khoản mới</small>
                 </>}
             </div>
         </div>
