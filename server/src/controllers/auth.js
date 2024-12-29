@@ -11,7 +11,7 @@ export const register = async (req, res) => {
         }
 
         const response = await authServices.registerService(req.body);
-        return res.status(201).json(response);
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({
             err: -1,
@@ -31,7 +31,7 @@ export const login = async (req, res) => {
         }
 
         const response = await authServices.loginService(req.body);
-        return res.status(201).json(response);
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({
             err: -1,

@@ -7,36 +7,37 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
-      },
-      code: {
+    },
+    code: {
         type: Sequelize.STRING
-      },
-      area: {
+    },
+    area: {
         type: Sequelize.STRING
-      },
-      type: {
+    },
+    type: {
         type: Sequelize.STRING
-      },
-        bonus: {
-            type: Sequelize.STRING
-        },
-        target: {
-            type: Sequelize.STRING
-        },
-        created: {
-            type: 'TIMESTAMP'
-        },
-        expire: {
-            type: 'TIMESTAMP'
-        },
-      createdAt: {
+    },
+    target: {
+        type: Sequelize.STRING
+    },
+    bonus: {
+        type: Sequelize.STRING
+    },
+    created: {
+        type: Sequelize.STRING
+    },
+    expired: {
+        type: Sequelize.STRING
+    },
+
+    createdAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      updatedAt: {
+    },
+    updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+    }
     });
   },
   async down(queryInterface, Sequelize) {
