@@ -9,8 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING
       },
-      images: {
-        type: Sequelize.STRING
+      image: {
+        type: Sequelize.TEXT('long')
       },
       createdAt: {
         allowNull: false,
